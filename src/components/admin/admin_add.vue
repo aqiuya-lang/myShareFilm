@@ -11,24 +11,41 @@
   </el-form> -->
 
    <div>
-       <el-upload class="upload-demo"
+       <!-- <el-upload class="upload-demo"
               drag
               action="123"
               :before-upload="beforeUpload"
               multiple
               ref="newupload"
-              :auto-upload="false"
+              
               accept=".mp4,.flv,.mov"
              >
              <i class="el-icon-upload"></i>
              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em>     </div>
              <div class="el-upload__tip" slot="tip">请注意您只能上传.mp4 .flv .mov格式的视频文件</div>
            </el-upload>
-               <el-button type="primary" @click="newSubmitForm()" class="yes-btn">确定</el-button>
+               <el-button type="primary" @click="newSubmitForm()" class="yes-btn">确定</el-button> -->
+
+          <el-upload
+            class="upload-demo"
+            drag
+            action="123"
+            :before-upload="beforeUpload"
+            accept=".mp4,.flv,.mov"
+            ref="newupload"
+            multiple>
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
+          </el-upload>
+          <el-button type="primary" class="btn" round @click="getAllMovie()">查看全部上传的电影</el-button>
+          <div class="allMovie">
+              
+            <ul>
+              <li v-for="item in allMOvie"></li>
+            </ul>
+          </div>
    </div>
-
-
-
 </template>
 
 <script>
@@ -38,14 +55,15 @@ export default {
     name: 'adminAdd',
     data () {
         return {
+          allMOvie: []
 
         }
     },
-    
+   
      methods: {
-      newSubmitForm () {
-       this.$refs.newupload.submit()
-      },
+      // newSubmitForm () {
+      //  this.$refs.newupload.submit()
+      // },
       beforeUpload (file) {
         console.log(file)
         const movieID = Math.floor(Math.random() * (9999-1000)) + 1000;
@@ -59,6 +77,17 @@ export default {
           console.log(res)
         })
        return true
+     },
+     getAllMovie () {
+        instance
+      .post('movie/list')
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => 
+      console.log(err))
+
+
      }
 
      }
@@ -134,6 +163,15 @@ export default {
     margin-top: 50px;
     margin-left: 50%;
     transform: translate(-50%,0);
+}
+.el-upload__tip{
+  color: #ffffff;
+}
+.btn{
+ margin-left: 50%;
+ transform: translate(-50%,0);
+  margin-top: 30px;
+  
 }
 
 </style>

@@ -1,20 +1,54 @@
 <template>
 <el-card class="box-card">
   <div slot="header" class="clearfix">
-    <span>卡片名称</span>
-    <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+    <span>公共房间列表</span>
   </div>
-  <div v-for="o in 4" :key="o" class="text item">
-    {{'列表内容 ' + o }}
+  <div v-for="item in allPublicRoom"  class="text item">
+    {{ '房间名称：' + item.roomName}}
+    <el-button type="info" class="btn" size="mini" plain @click="joinThisRoom(item.roomId)">加入该房间</el-button>
+
   </div>
 </el-card>
   
-</template>
-
+</template>item
+item.roomName
 <script>
+import instance from '../network';
 export default {
-    name: 'joinPublicRoom'
-
+    name: 'joinPublicRoom',
+    data () {
+      return {
+        allPublicRoom:[]
+      }
+    },
+   mounted() {
+      instance
+            .get('/room/findAll')
+            .then(res => {
+                console.log(res)
+                console.log(res.data)
+                this.allPublicRoom = res.data
+            })
+            .catch(err => {
+                console.log(err)
+            })
+   },
+   methods: {
+     joinThisRoom (roomId) {
+       let param = new FormData();
+       param.append('roomId',roomId)
+       instance
+       .post('/room/enter',param)
+       .then(res => {
+         console.log(res)
+         console.log(roomId)
+         this.$router.push('/publicRoom')
+       })
+       .catch(err => {
+         console.log(err)
+       })
+     }
+   }
 }
 </script>
 
@@ -39,5 +73,4 @@ export default {
   .box-card {
     width: 480px;
   }
-
 </style>

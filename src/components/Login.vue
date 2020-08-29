@@ -65,6 +65,10 @@ export default {
     //1597763280902
     //aqiuya
 
+    //1598698691813
+    //aqiuya
+    
+
     methods: {
         ...mapMutations(['changeLogin']),
   
@@ -85,6 +89,7 @@ export default {
                      //将用户 token 保存到 vuex 中
                      this.changeLogin({Authorization: this.userToken})
                      this.$store.commit('setUserId',userId);
+                    
                      console.log(localStorage.getItem('userId'));
                      console.log(userId);
                      console.log(res.token)

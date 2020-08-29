@@ -1,52 +1,80 @@
 <template>
-  <div class='public'>
-    <div class="msg-box">
-      <div class="sendMsg">
-      <el-input
-        type="textarea"
-        autosize
-        placeholder="快来一起聊天吧"
-        v-model="textarea1">
-        </el-input>
-        <el-button type="success" size="mini" plain>发送</el-button>
-      </div>
-    </div>
-  </div>
-</template>
+  <div>
+    <div class="movie">
+      <el-dropdown>
+  <span class="el-dropdown-link">
+    请选择你要播放的电影<i class="el-icon-arrow-down el-icon--right"></i>
+  </span>
+  <el-dropdown-menu slot="dropdown">
+    <el-dropdown-item @click.native="check(item)" v-for="item in movieList" :key="item.movieId">{{item.movieId}}</el-dropdown-item>
+  </el-dropdown-menu>
+</el-dropdown>
+  <div class="playMovie">
+    <video :src="myMovie" controls width="600px" height="500px"></video>
+   
 
+      </div>
+     
+    </div>
+    <room></room>
+  </div>
+ 
+</template>
 <script>
+import room from '../components/room'
+import instance from '../network'
 export default {
-  data() {
+  data () {
     return {
-      textarea1: '',
-      textarea2: ''
+      movieList: [],
+      myMovie: ''
+      
+    }
+  },
+  components :{
+    room
+  },
+  mounted () {
+    instance
+    .post('/movie/list')
+    .then(res => {
+      console.log(res);
+      this.movieList = res.data
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  },
+   methods: {
+     check (item) {
+       this.myMovie = 
+       alert("你选择的电影是" + item.movieName)
+       console.log(item.movieName)
+       this.myMovie = item.movieSrc
+       console.log(this.myMovie)
+
+     }   
     }
   }
-}
+
+
+
 </script>
 
 <style>
-.msg-box{
-   display: flex;
-  width: 50%;
-  position: absolute;
-  bottom: 60px;
-  left: 50%;
-  transform: translate(-50%,0%);
-  margin: 0 auto;
-  width: 50%;
-  height:50vh;
-  border: solid 2px red;
+.movie{
+  width: 90%;
+  height: 40%;
+  margin-left: 10%;
+  margin-top: 5px;
 }
-.sendMsg{
-  display: flex;
-  width: 50%;
-  position: absolute;
-  bottom: 0px;
-  left: 50%;
-  transform: translate(-50%,0%);
+.playMovie {
+  width: 90%;
+  height: 200px;
+
 }
-
-
+.el-dropdown-link {
+  color: #ffffff;
+}
 
 </style>

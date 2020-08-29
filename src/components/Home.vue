@@ -70,7 +70,20 @@ export default {
             activeName: '0'
         }
     },
+      mounted () {
+    // 初始话人员
+    this.getInformation ();
+  },
     methods:{
+        getInformation () {
+        instance
+            .get('/user/preupdate',)
+            .then(res => {
+                console.log(res.data.userName)
+                this.$store.commit('setUserName',res.data.userName);
+                console.log(localStorage.getItem('userName'))
+            })
+        },
         createPublicRoom () {
            const roomId = Math.floor(Math.random() * (9999-1000)) + 1000
             instance
@@ -120,14 +133,7 @@ export default {
 
         },
         lookAllPublicRoom () {
-            instance
-            .get('/room/findAll')
-            .then(res => {
-                console.log(res)
-            })
-            .catch(err => {
-                console.log(err)
-            })
+            this.$router.push('/joinPublicRoom')
 
         },
         checkProfile() {

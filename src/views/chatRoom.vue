@@ -11,10 +11,7 @@
 </el-dropdown>
   <div class="playMovie">
     <video :src="myMovie" controls width="600px" height="500px"></video>
-   
-
       </div>
-     
     </div>
     <room></room>
   </div>
@@ -27,8 +24,7 @@ export default {
   data () {
     return {
       movieList: [],
-      myMovie: ''
-      
+      myMovie: '' 
     }
   },
   components :{
@@ -71,10 +67,8 @@ export default {
 .playMovie {
   width: 90%;
   height: 200px;
-
 }
 .el-dropdown-link {
   color: #ffffff;
 }
-
 </style>

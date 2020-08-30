@@ -61,14 +61,11 @@ export default {
             }
         }
     },
-
     //1597763280902
     //aqiuya
 
     //1598698691813
     //aqiuya
-    
-
     methods: {
         ...mapMutations(['changeLogin']),
   

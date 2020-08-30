@@ -18,14 +18,10 @@
                   <el-form-item label="性别">
                     <el-input v-model="formLabelAlign.changeSex"></el-input>
                   </el-form-item>
-                  <el-form-item label="年龄">
-                    <el-input v-model="formLabelAlign.changeAge"></el-input>
+                  <el-form-item label="电话">
+                    <el-input v-model="formLabelAlign.changePhone"></el-input>
                   </el-form-item>
-                  <el-form-item label="地区">
-                    <el-input v-model="formLabelAlign.changeArea"></el-input>
-                   </el-form-item>
                 </el-form> 
-
                 <el-row>
                   <el-button type="success" round @click="storge()">保存资料</el-button>
                 </el-row>
@@ -33,21 +29,21 @@
              
             </el-drawer>
         </div>
-    <div class="text item" v-model="username">
+    <div class="text item" v-model="userName">
         <span>昵称：</span>
-        <span>{{username}}</span>
+        <span>{{userName}}</span>
      </div>
-      <div class="text item" v-model="sex">
+      <div class="text item" v-model="userSex">
          <span>性别：</span>
-         <span>{{sex}}</span>
+         <span>{{userSex}}</span>
      </div>
-      <div class="text item" v-model="age">
-         <span>年龄：</span>
-         <span>{{age}}</span>
+      <div class="text item" v-model="userPhone">
+         <span>电话：</span>
+         <span>{{userPhone}}</span>
      </div>
-    <div class="text item" v-model="area">
-         <span>地区：</span>
-         <span>{{area}}</span>
+    <div class="text item" v-model="userId">
+         <span>ID：</span>
+         <span>{{userId}}</span>
      </div>
     </el-card>
   </div>
@@ -60,18 +56,17 @@ export default {
     name: "Profile",
     data () {
         return {
-            username: "",
-            sex: "",
-            age: "",
-            area: "",
+            userName: "",
+            userSex: "",
+            userId: "",
+            userPhone: "",
             drawer: false,
             direction: 'rtl',
             labelPosition: 'right',
         formLabelAlign: {
           changeName: '',
           changeSex: '',
-          changeAge: '',
-          changeArea: ''
+          changePhone: '',
         }
         }
     },
@@ -82,7 +77,17 @@ export default {
     methods: {
       getInformation () {
         instance
-        .get('/user/preupdate',)
+        .get('/user/preupdate')
+        .then(res => {
+          console.log(res)
+          this.userName = res.data.userName;
+          this.userSex = res.data.userSex;
+          this.userPhone = res.data.userPhone
+          this.userId = res.data.userId
+        })
+        .catch(err => {
+          console.log(err)
+        })
 
 
       },
@@ -95,14 +100,23 @@ export default {
           .catch(_ => {});
       },
       storge () {
-        this.username = this.formLabelAlign.changeName,
-        this.sex = this.formLabelAlign.changeSex,
-        this.age = this.formLabelAlign.changeAge,
-        this.area = this.formLabelAlign.changeArea
+        let param = new FormData();
+        param.append("userName",this.formLabelAlign.changeName);
+        param.append("userSex",this.formLabelAlign.changeSex);
+        param.append("userPhone",this.formLabelAlign.changePhone)
+        instance
+        .post('/user/update',param)
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+        this.userName = this.formLabelAlign.changeName,
+        this.userSex = this.formLabelAlign.changeSex,
+        this.userPhone = this.formLabelAlign.changePhone
       }
-      
     }
-
 }
 </script>
 

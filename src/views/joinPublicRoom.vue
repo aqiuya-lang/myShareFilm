@@ -35,6 +35,7 @@ export default {
    },
    methods: {
      joinThisRoom (roomId) {
+       console.log(roomId)
        let param = new FormData();
        param.append('roomId',roomId)
        instance

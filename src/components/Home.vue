@@ -30,7 +30,15 @@
                 <el-button type="info" round @click="lookAllPublicRoom">查看所有公共房间</el-button>
             </el-collapse-item>
             <el-collapse-item title="加入私人房间" name="4">
-                
+                <el-form ref="form" :model="joinPrivateRoom" label-width="80px">
+                 <el-form-item label="房间ID">
+                        <el-input v-model="joinPrivateRoom.roomId"></el-input>
+                    </el-form-item>
+                    <el-form-item label="房间密码">
+                        <el-input v-model="joinPrivateRoom.roomPwd"></el-input>
+                    </el-form-item>
+                    <el-button type="info" class="btn" round size="mini" @click="privateRoom()">加入私人房间</el-button>
+                </el-form>
             </el-collapse-item>
              <el-collapse-item title="查看个人资料" name="5">
                 <div class="text item" v-model="privateProfile.userId">
@@ -61,11 +69,15 @@ export default {
                 roomName: '',
                 roomPwd: ''
             },
+            joinPrivateRoom: {
+                roomId: '',
+                roomPwd: ''
+
+            },
             privateProfile: {
                 userName: localStorage.getItem('userName'),
                 userId: localStorage.getItem('userId'),
                 userPhone: localStorage.getItem('userPhone')
-                
             },
             activeName: '0'
         }
@@ -125,7 +137,7 @@ export default {
             )
             .then(res => {
                 console.log(res)
-                this.$router.push('/privateRoom')
+                this.$router.push('/publicRoom')
             })
             .catch(err => {
                 console.log(err)
@@ -135,6 +147,19 @@ export default {
         lookAllPublicRoom () {
             this.$router.push('/joinPublicRoom')
 
+        },
+        privateRoom () {
+            let param = new FormData();
+            param.append('roomId',this.joinPrivateRoom.roomId);
+            param.append('roomPwd',this.joinPrivateRoom.roomPwd);
+            instance
+            .post('/room/enter',param)
+            .then(res => {
+                console.log(res)
+            })
+            .catch(err => {
+                console.log(err)
+            })
         },
         checkProfile() {
             this.$router.push("/profile");

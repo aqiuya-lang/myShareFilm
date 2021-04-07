@@ -24,11 +24,8 @@
      <el-row class="btn">
          <el-button type="primary" @click="loginCheck(loginForm.userId,loginForm.userPwd)" size="small">登录</el-button>
          <el-button type="info"@click="resetForm('ruleForm')" size="small">重置</el-button>
-          
     </el-row>
      </el-form>
-
-   
       </div>
   </div>
 </template>
@@ -52,7 +49,7 @@ export default {
             loginRules : {
               userId: [
                  { required: true, message: '请输入用户名', trigger: 'blur' },
-                 { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+                //  { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
               ],
               userPwd: [
                  { required: true, message: '请输入密码', trigger: 'blur' },
@@ -61,6 +58,10 @@ export default {
             }
         }
     },
+
+    //1599740268125
+    //aqiuya
+    
     //1597763280902
     //aqiuya
 
@@ -90,6 +91,7 @@ export default {
                      console.log(localStorage.getItem('userId'));
                      console.log(userId);
                      console.log(res.token)
+                     
                     this.$router.replace('/home')
                 }else {
                     alert('用户名不存在或者密码错误');

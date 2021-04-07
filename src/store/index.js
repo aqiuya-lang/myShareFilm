@@ -5,7 +5,6 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    userName: "",
     userId: "",
     userPwd: "",
     userPhone:"",
@@ -21,11 +20,6 @@ export default new Vuex.Store({
       state.Authorization = user.Authorization;
       localStorage.setItem('Authorization', user.Authorization);
     },
-  
-    
-    
-
-
     //存储用户ID
     setUserId (state,userId) {
       state.userId = userId;

@@ -4,12 +4,13 @@ const Login = () => import('../components/Login.vue')
 const Register = () => import('../components/Register.vue')
 const Home = () => import('../components/Home.vue')
 const Profile = () => import('../views/profile.vue')
-const PublicRoom = () => import('../views/chatRoom.vue')
-const PrivateRoom = () => import('../views/privateRoom.vue')
+const PublicRoom = () => import('../components/chatRoom.vue')
+// const PrivateRoom = () => import('../views/privateRoom.vue')
 const adminRegister = () => import('../components/admin/admin_reg.vue')
 const adminLogin = () => import('../components/admin/admin_login.vue')
 const adminAdd = () => import('../components/admin/admin_add.vue')
 const joinPublicRoom = () => import('../views/joinPublicRoom.vue')
+const joinPrivateRoom = () => import('../views/joinPrivateRoom.vue')
 Vue.use(VueRouter)
 
   const routes = [
@@ -38,10 +39,6 @@ Vue.use(VueRouter)
      component: PublicRoom
    },
    {
-     path: '/privateRoom',
-     component: PrivateRoom
-   },
-   {
      path: '/admin_reg',
      component: adminRegister
    },
@@ -56,6 +53,10 @@ Vue.use(VueRouter)
    {
      path: '/joinPublicRoom',
      component: joinPublicRoom
+   },
+   {
+     path: '/joinPrivateRoom',
+     component: joinPrivateRoom
    }
 ]
 

@@ -1,29 +1,42 @@
 <template>
-<el-card class="box-card">
+<div>
+  <el-card v-if="!isEnter " class="box-card">
   <div slot="header" class="clearfix">
     <span>公共房间列表</span>
   </div>
   <div v-for="item in allPublicRoom"  class="text item">
     {{ '房间名称：' + item.roomName}}
     <el-button type="info" class="btn" size="mini" plain @click="joinThisRoom(item.roomId)">加入该房间</el-button>
-
   </div>
 </el-card>
-  
-</template>item
-item.roomName
+<div v-model="roomMsg.isHost"></div>
+<div v-model="roomMsg.rooId"></div>
+<div v-model="roomMsg.playingMovie"></div>
+<chat-room :cIsHost="roomMsg.isHost" :cRoomId="roomMsg.roomId" :cPlayingMovie="roomMsg.playingMovie" v-if="isEnter"></chat-room>
+</div>
+</template>
 <script>
+import chatRoom from '../components/chatRoom'
 import instance from '../network';
 export default {
     name: 'joinPublicRoom',
     data () {
       return {
+        isEnter: false,
+        roomMsg: {
+          isHost: false,
+          roomId: '',
+          playingMovie: '',
+        },
         allPublicRoom:[]
       }
     },
+    components: {
+      chatRoom
+    },
    mounted() {
       instance
-            .get('/room/findAll')
+            .get('/room/findAllPublic')
             .then(res => {
                 console.log(res)
                 console.log(res.data)
@@ -36,14 +49,31 @@ export default {
    methods: {
      joinThisRoom (roomId) {
        console.log(roomId)
-       let param = new FormData();
-       param.append('roomId',roomId)
+        // this.roomId = roomId;
+      //  let param = new FormData();
+      //  param.append('roomId',roomId)
        instance
-       .post('/room/enter',param)
+       .post('/room/enter',{
+         roomId
+       })
        .then(res => {
          console.log(res)
-         console.log(roomId)
-         this.$router.push('/publicRoom')
+         console.log(res.roomOwnId)
+         console.log(res.userId)
+         if(res.userId === res.roomOwnId){
+           this.roomMsg.isHost = true
+           this.roomMsg.playingMovie = res.movieSrc
+           console.log(this.roomMsg.playingMovie)
+           this.roomMsg.roomId = roomId
+          //  this.playingMovie = res.data.movieSrc;
+         } else {
+           this.roomMsg.isHost = false
+           this.roomMsg.playingMovie = res.movieSrc
+           console.log(this.roomMsg.playingMovie)
+           this.roomMsg.roomId = roomId
+         }
+         this.isEnter = true
+        //  this.$router.push('/publicRoom')
        })
        .catch(err => {
          console.log(err)
@@ -57,11 +87,9 @@ export default {
  .text {
     font-size: 14px;
   }
-
   .item {
     margin-bottom: 18px;
   }
-
   .clearfix:before,
   .clearfix:after {
     display: table;

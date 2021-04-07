@@ -1,6 +1,7 @@
 <template>
 <div class="box">
-    <div class="top">
+    <div v-if="!isJoin" v-model="myRoomId">
+          <div class="top">
         <h2>SHARE FILM</h2>
     </div>
     <div class="body">
@@ -30,6 +31,7 @@
                 <el-button type="info" round @click="lookAllPublicRoom">查看所有公共房间</el-button>
             </el-collapse-item>
             <el-collapse-item title="加入私人房间" name="4">
+                <el-button type="info" round @click="lookAllPrivateRoom">查看所有私人房间</el-button>
                 <el-form ref="form" :model="joinPrivateRoom" label-width="80px">
                  <el-form-item label="房间ID">
                         <el-input v-model="joinPrivateRoom.roomId"></el-input>
@@ -53,14 +55,25 @@
     <div class="footer">
          
     </div>
+
+    </div>
+    <chat-room v-if="isJoin" :cRoomId="myRoomId"></chat-room>
+  
 </div>
 </template>
 <script>
+import chatRoom from '../components/chatRoom'
 import instance from '../network';
 export default {
     name:'Home',
+    components: {
+        chatRoom
+    },
     data () {
         return {
+            isJoin: false,
+            myRoomId: '',
+            
             publicForm: {
                 roomName: '',
                 roomPwd:'',
@@ -72,7 +85,6 @@ export default {
             joinPrivateRoom: {
                 roomId: '',
                 roomPwd: ''
-
             },
             privateProfile: {
                 userName: localStorage.getItem('userName'),
@@ -97,14 +109,18 @@ export default {
             })
         },
         createPublicRoom () {
-           const roomId = Math.floor(Math.random() * (9999-1000)) + 1000
+            console.log(localStorage.getItem('userId'))
+           
+            const roomId = Math.floor(Math.random() * (9999-1000)) + 1000
+            this.myRoomId = roomId;
+            console.log(this.myRoomId)
             instance
             .post('/room/build',
             {
-                userId: Number(localStorage.getItem('userId')),
+                roomOwnId: Number(localStorage.getItem('userId')),
                 roomName: this.publicForm.roomName,
                 roomId: roomId,
-                roomAthority: true
+                roomAuthority: true
             }
             ,
             {
@@ -113,7 +129,8 @@ export default {
             )
             .then(res => {
                 console.log(res)
-                this.$router.push('/publicRoom')
+                // this.$router.push('/publicRoom')
+                 this.isJoin = true;
             })
             .catch(err => {
                 console.log(err)
@@ -121,14 +138,16 @@ export default {
 
         },
         createPrivateRoom () {
-            const roomID = Math.floor(Math.random() * (9999-1000)) + 1000
+            
+            const roomId = Math.floor(Math.random() * (9999-1000)) + 1000
+            this.myRoomId = roomId;
             instance
             .post('/room/build',
             {
-                userId: localStorage.getItem('userId'),
+                roomOwnId: localStorage.getItem('userId'),
                 roomName: this.privateForm.roomName,
-                roomId: roomID,
-                roomAthority: 'false',
+                roomId: roomId,
+                roomAuthority: false,
                 roomPwd: this.privateForm.roomPwd
             },
             {
@@ -137,7 +156,9 @@ export default {
             )
             .then(res => {
                 console.log(res)
-                this.$router.push('/publicRoom')
+                this.roomId = roomId
+                this.isJoin = true;
+                // this.$router.push('/publicRoom')
             })
             .catch(err => {
                 console.log(err)
@@ -148,12 +169,20 @@ export default {
             this.$router.push('/joinPublicRoom')
 
         },
+        lookAllPrivateRoom () {
+            this.$router.push('/joinPrivateRoom')
+        },
         privateRoom () {
-            let param = new FormData();
-            param.append('roomId',this.joinPrivateRoom.roomId);
-            param.append('roomPwd',this.joinPrivateRoom.roomPwd);
+            //5267
+            // let param = new FormData();
+            // param.append('roomId',this.joinPrivateRoom.roomId);
+            // param.append('roomPwd',this.joinPrivateRoom.roomPwd);
             instance
-            .post('/room/enter',param)
+            .post('/room/enter',{
+                roomId: this.joinPrivateRoom.roomId,
+                roomPwd: this.joinPrivateRoom.roomPwd
+
+            })
             .then(res => {
                 console.log(res)
             })

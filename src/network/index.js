@@ -28,7 +28,8 @@ export function newVideo (data) {
       url: '/movie/upload',
       data: data,
       headers: {
+          
           "token": localStorage.getItem('Authorization')
       }
-    })
+    })   
   }

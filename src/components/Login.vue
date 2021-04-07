@@ -86,6 +86,9 @@ export default {
                      this.userToken = res.token;
                      //将用户 token 保存到 vuex 中
                      this.changeLogin({Authorization: this.userToken})
+
+
+                     
                      this.$store.commit('setUserId',userId);
                     
                      console.log(localStorage.getItem('userId'));
